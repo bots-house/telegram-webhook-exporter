@@ -12,6 +12,12 @@ import (
 	"golang.org/x/xerrors"
 )
 
+var (
+	// buildVersion = "unknown"
+	buildRef  = "unknown"
+	buildTime = "unknown"
+)
+
 type Config struct {
 	Addr   string   `envconfig:"ADDR" default:":8000"`
 	Tokens []string `envconfig:"TOKENS" required:"true"`
@@ -22,6 +28,8 @@ func main() {
 
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
+
+	log.Printf("start exporter build %s, builded at %s", buildRef, buildTime)
 
 	if err := run(ctx); err != nil {
 		log.Printf("run error: %v", err)
