@@ -62,6 +62,4 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	wg.Wait()
-
-	return
 }
