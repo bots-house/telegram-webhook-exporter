@@ -15,20 +15,20 @@ RUN go mod download
 COPY . .
 
 # git tag 
-ARG BUILD_VERSION
+ARG VERSION
 
 # git commit sha
-ARG BUILD_REF
+ARG COMMIT
 
 # build time 
-ARG BUILD_TIME
+ARG DATE
 
 # compile 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
-      -ldflags="-w -s -extldflags \"-static\" -X \"main.buildVersion=${BUILD_VERSION}\" -X \"main.buildRef=${BUILD_REF}\" -X \"main.buildTime=${BUILD_TIME}\"" \
-      -a \
-      -tags timetzdata \
-      -o /bin/telegram-webhook-exporter .
+    -ldflags="-w -s -extldflags \"-static\" -X \"main.buildVersion=${VERSION}\" -X \"main.buildRef=${COMMIT}\" -X \"main.buildTime=${DATE}\"" \
+    -a \
+    -tags timetzdata \
+    -o /bin/telegram-webhook-exporter .
 
 
 # run 
@@ -39,8 +39,5 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /bin/telegram-webhook-exporter /bin/telegram-webhook-exporter
 
 EXPOSE 8000
-
-# Reference: https://github.com/opencontainers/image-spec/blob/master/annotations.md
-LABEL org.opencontainers.image.source="https://github.com/bots-house/telegram-webhook-exporter"
 
 ENTRYPOINT [ "telegram-webhook-exporter" ]
